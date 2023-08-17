@@ -1,6 +1,6 @@
 <template>
   <footer class="footer">
-    <img class="footer__logo" src="/public/logo.svg" alt="">
+    <img class="footer__logo" src="/public/logo.svg" alt="Logo">
     <span class="footer__text">© alpha, 2023</span>
   </footer>
 </template>
