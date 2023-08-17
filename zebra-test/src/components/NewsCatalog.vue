@@ -1,17 +1,34 @@
 <script setup>
 import Card from './card.vue';
-import {reactive, ref} from 'vue'
+import {reactive, ref,  watch} from 'vue'
 
-const data = ref([])
+const current = reactive({
+  'value':1
+})
+const total = reactive({
+  'value':1
+})
+
+const data = ref({})
 const error = ref([])
 
 let api = 'http://flems.github.io/test/api/news/';
 
+function getData(page) {
+fetch(`${api}${page}`)
+    .then((res) => res.json())
+    .then((json) => { data.value = json;
+      total.value=data.value.nav.total;
+    })
+    .catch((err) => (error.value = err))
+}
 
-fetch(api)
-  .then((res) => res.json())
-  .then((json) => (data.value = json))
-  .catch((err) => (error.value = err))
+watch(current, () => {
+  getData(current.value)
+});
+
+getData(current.value);
+
 </script>
 
 <template>
@@ -21,7 +38,7 @@ fetch(api)
         <Card v-for="newsItem in data.items" :newsItem="newsItem"/>
       </div>
       <div class="news__button-container">
-        <button v-show="(data.nav.current!==data.nav.total)"  class="news__button">загрузить ещё</button>
+        <button v-show="(current.value<total.value)" @click="current.value+=1" class="news__button">загрузить ещё</button>
       </div>
     </div>
   </section>
